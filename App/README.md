@@ -1,4 +1,4 @@
-TODO: exclude/include some calendars (bergs-only, us-only...)
+TODO: different significance levels for different groups
 
 # Date formatting for holidays
 

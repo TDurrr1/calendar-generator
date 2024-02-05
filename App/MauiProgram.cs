@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CalendarGenerator.State;
+using Microsoft.Extensions.Logging;
 
 namespace CalendarGenerator
 {
@@ -15,6 +16,7 @@ namespace CalendarGenerator
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddSingleton<IAppState, AppState>();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
