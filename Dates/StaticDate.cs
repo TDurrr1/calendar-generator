@@ -5,119 +5,119 @@ using System.Text.RegularExpressions;
 
 namespace Dates
 {
-    public class StaticDate : CustomDate
-    {
-        public StaticDate(int? year, int month, int day, int? offset = 0, LeapDayAdjustment lda = LeapDayAdjustment.March1)
-        {
-            if (year.HasValue) ArgumentOutOfRangeException.ThrowIfNegativeOrZero(year.Value);
-            Year = year;
+	public class StaticDate : CustomDate
+	{
+		public StaticDate(int? year, int month, int day, int? offset = 0, LeapDayAdjustment lda = LeapDayAdjustment.March1)
+		{
+			if (year.HasValue) ArgumentOutOfRangeException.ThrowIfNegativeOrZero(year.Value);
+			Year = year;
 
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(month);
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
-            Month = month;
+			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(month);
+			ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
+			Month = month;
 
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(day);
-            var maxDay = new DateOnly(
-                (year ?? 2000) + (month == 12 ? 1 : 0),
-                month == 12 ? 1 : month + 1,
-                1
-            ).AddDays(-1).Day;
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(day, maxDay);
-            Day = day;
+			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(day);
+			var maxDay = new DateOnly(
+				 (year ?? 2000) + (month == 12 ? 1 : 0),
+				 month == 12 ? 1 : month + 1,
+				 1
+			).AddDays(-1).Day;
+			ArgumentOutOfRangeException.ThrowIfGreaterThan(day, maxDay);
+			Day = day;
 
-            Offset = offset;
+			Offset = offset;
 
-            LeapDayAdjustment = lda;
-        }
+			LeapDayAdjustment = lda;
+		}
 
-        public int Month { get; init; }
-        public int Day { get; init; }
-        public LeapDayAdjustment LeapDayAdjustment { get; init; }
+		public int Month { get; init; }
+		public int Day { get; init; }
+		public LeapDayAdjustment LeapDayAdjustment { get; init; }
 
-        public static new Regex RegEx = new Regex($"^((?<{nameof(Year)}>\\d{{4}})-)?(?<{nameof(Month)}>\\d{{2}})-(?<{nameof(Day)}>\\d{{2}})(_(?<{nameof(Offset)}>[+-]?\\d{{1,3}}))?$", RegexOptions.ExplicitCapture & RegexOptions.Compiled);
+		public static new Regex RegEx = new Regex($"^((?<{nameof(Year)}>\\d{{4}})-)?(?<{nameof(Month)}>\\d{{2}})-(?<{nameof(Day)}>\\d{{2}})(_(?<{nameof(Offset)}>[+-]?\\d{{1,3}}))?$", RegexOptions.ExplicitCapture & RegexOptions.Compiled);
 
-        public static new StaticDate Parse(string s, IFormatProvider? provider = null)
-        {
-            ArgumentNullException.ThrowIfNull(s);
-            if (!RegEx.IsMatch(s)) throw new FormatException();
+		public static new StaticDate Parse(string s, IFormatProvider? provider = null)
+		{
+			ArgumentNullException.ThrowIfNull(s);
+			if (!RegEx.IsMatch(s)) throw new FormatException();
 
-            provider ??= CultureInfo.CurrentCulture;
+			provider ??= CultureInfo.CurrentCulture;
 
-            var groups = RegEx.Match(s).Groups;
+			var groups = RegEx.Match(s).Groups;
 
-            var year = groups[nameof(Year)].Value;
-            var month = groups[nameof(Month)].Value;
-            var day = groups[nameof(Day)].Value;
-            var offset = groups[nameof(Offset)].Value;
+			var year = groups[nameof(Year)].Value;
+			var month = groups[nameof(Month)].Value;
+			var day = groups[nameof(Day)].Value;
+			var offset = groups[nameof(Offset)].Value;
 
-            if (year == string.Empty) year = null;
-            if (offset == string.Empty) offset = null;
-            
-            try
-                {
-                return new StaticDate(
-                    year != null ? int.Parse(year) : null,
-                    int.Parse(month),
-                    int.Parse(day),
-                    offset != null ? int.Parse(offset) : null,
-                    LeapDayAdjustment.ThrowException
-                );
-            }
-            catch(ArgumentException e)
-            {
-                throw new OverflowException("Failed to parse.", e);
-            }
-        }
+			if (year == string.Empty) year = null;
+			if (offset == string.Empty) offset = null;
 
-        public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out StaticDate result)
-        {
-            provider ??= CultureInfo.CurrentCulture;
-            result = null;
+			try
+			{
+				return new StaticDate(
+					 year != null ? int.Parse(year) : null,
+					 int.Parse(month),
+					 int.Parse(day),
+					 offset != null ? int.Parse(offset) : null,
+					 LeapDayAdjustment.ThrowException
+				);
+			}
+			catch (ArgumentException e)
+			{
+				throw new OverflowException("Failed to parse.", e);
+			}
+		}
 
-            try
-            {
-                result = Parse(s, provider);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+		public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out StaticDate result)
+		{
+			provider ??= CultureInfo.CurrentCulture;
+			result = null;
 
-        public override DateOnly CalculateDate(int inYear)
-        {
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(inYear);
+			try
+			{
+				result = Parse(s, provider);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
 
-            var month = Month;
-            var day = Day;
-            if(Month == 2 && Day == 29 && !DateTime.IsLeapYear(inYear))
-            {
-                switch(LeapDayAdjustment)
-                {
-                    case LeapDayAdjustment.February28:
-                        month = 2;
-                        day = 28;
-                        break;
-                    case LeapDayAdjustment.March1:
-                        month = 3;
-                        day = 1;
-                        break;
-                    case LeapDayAdjustment.ThrowException:
-                        throw new InvalidOperationException("Cannot generate date for February 29 in non-leap year.");
-                    default:
-                        throw new NotImplementedException("Case not specified for this LeapDayAdjustment value.");
-                }
-            }
+		public override DateOnly CalculateDate(int inYear)
+		{
+			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(inYear);
 
-            return new DateOnly(inYear, month, day).AddDays(Offset ?? 0);
-        }
-    }
+			var month = Month;
+			var day = Day;
+			if (Month == 2 && Day == 29 && !DateTime.IsLeapYear(inYear))
+			{
+				switch (LeapDayAdjustment)
+				{
+					case LeapDayAdjustment.February28:
+						month = 2;
+						day = 28;
+						break;
+					case LeapDayAdjustment.March1:
+						month = 3;
+						day = 1;
+						break;
+					case LeapDayAdjustment.ThrowException:
+						throw new InvalidOperationException("Cannot generate date for February 29 in non-leap year.");
+					default:
+						throw new NotImplementedException("Case not specified for this LeapDayAdjustment value.");
+				}
+			}
 
-    public enum LeapDayAdjustment
-    {
-        February28,
-        March1,
-        ThrowException
-    }
+			return new DateOnly(inYear, month, day).AddDays(Offset ?? 0);
+		}
+	}
+
+	public enum LeapDayAdjustment
+	{
+		February28,
+		March1,
+		ThrowException
+	}
 }

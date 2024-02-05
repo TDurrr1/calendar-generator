@@ -2,17 +2,21 @@
 
 namespace Events
 {
-    public class Birthday : CalendarEvent
-    {
-        public string Name => Identifier;
+	public class Birthday : CalendarEvent
+	{
+		public string Possessive { get; init; }
 
-        public Birthday(string name, CustomDate date) : base(name, date, EventType.Birthday)
-        {
-        }
-
-        public override string GenerateDescription(int inYear)
-        {
-            throw new NotImplementedException();
-        }
-    }
+		public Birthday(string name, CustomDate date, string possessive = null) : base(name, date, EventType.Birthday)
+		{
+			if (possessive == null)
+			{
+				Possessive = Identifier + "’s";
+			}
+			else
+			{
+				ArgumentException.ThrowIfNullOrWhiteSpace(possessive);
+				Possessive = possessive.Trim();
+			}
+		}
+	}
 }

@@ -68,4 +68,8 @@
 		<InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
     </ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\State\State.csproj" />
+	</ItemGroup>
+
 </Project>
