@@ -9,18 +9,20 @@ namespace Dates
     {
         public StaticDate(int? year, int month, int day, int? offset = 0, LeapDayAdjustment lda = LeapDayAdjustment.March1)
         {
-            if (year.HasValue && year <= 0) throw new ArgumentOutOfRangeException(nameof(year), "Year must be a whole number, if specified.");
+            if (year.HasValue) ArgumentOutOfRangeException.ThrowIfNegativeOrZero(year.Value);
             Year = year;
 
-            if (!month.InRange(1, 12)) throw new ArgumentOutOfRangeException(nameof(month), "Month must be a value between 1 and 12, inclusive.");
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(month);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
             Month = month;
 
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(day);
             var maxDay = new DateOnly(
                 (year ?? 2000) + (month == 12 ? 1 : 0),
                 month == 12 ? 1 : month + 1,
                 1
             ).AddDays(-1).Day;
-            if (!day.InRange(1, maxDay)) throw new ArgumentOutOfRangeException(nameof(month), "For specified year and month, day must be a value between 1 and " + maxDay + ", inclusive.");
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(day, maxDay);
             Day = day;
 
             Offset = offset;
@@ -36,7 +38,7 @@ namespace Dates
 
         public static new StaticDate Parse(string s, IFormatProvider? provider = null)
         {
-            if (s == null) throw new ArgumentNullException(nameof(s));
+            ArgumentNullException.ThrowIfNull(s);
             if (!RegEx.IsMatch(s)) throw new FormatException();
 
             provider ??= CultureInfo.CurrentCulture;
@@ -85,7 +87,7 @@ namespace Dates
 
         public override DateOnly CalculateDate(int inYear)
         {
-            if (inYear <= 0) throw new ArgumentOutOfRangeException(nameof(inYear), "Year must be a whole number.");
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(inYear);
 
             var month = Month;
             var day = Day;

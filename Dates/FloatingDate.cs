@@ -10,16 +10,18 @@ namespace Dates
         public FloatingDate(int month, int instance, int dayOfWeek, int? offset = 0)
             : this(month, instance, DayOfWeek.Sunday, offset)
         {
-            if (!dayOfWeek.InRange(1, 7)) throw new ArgumentOutOfRangeException(nameof(dayOfWeek), "Day of week must be a value between 1 and 7, inclusive.");
-            DayOfWeek = DayOfWeekIntToEnum(dayOfWeek);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(dayOfWeek);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(dayOfWeek, 7);
+            DayOfWeek = IntToDOWMapping[dayOfWeek];
         }
 
         public FloatingDate(int month, int instance, DayOfWeek dayOfWeek, int? offset = 0)
         {
-            if (!month.InRange(1, 12)) throw new ArgumentOutOfRangeException(nameof(month), "Month must be a value between 1 and 12, inclusive.");
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(month);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
             Month = month;
 
-            if (instance <= 0) throw new ArgumentOutOfRangeException(nameof(instance), "Instance must be a whole number.");
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(instance);
             Instance = instance;
 
             DayOfWeek = dayOfWeek;
@@ -35,7 +37,7 @@ namespace Dates
 
         public static new FloatingDate Parse(string s, IFormatProvider? provider = null)
         {
-            if (s == null) throw new ArgumentNullException(nameof(s));
+            ArgumentNullException.ThrowIfNull(s);
             if (!RegEx.IsMatch(s)) throw new FormatException();
 
             provider ??= CultureInfo.CurrentCulture;
@@ -54,7 +56,7 @@ namespace Dates
                 return new FloatingDate(
                     int.Parse(month),
                     int.Parse(instance),
-                    DayOfWeekIntToEnum(int.Parse(dayOfWeek)),
+                    IntToDOWMapping[int.Parse(dayOfWeek)],
                     offset != null ? int.Parse(offset) : null
                 );
             }
@@ -80,25 +82,22 @@ namespace Dates
             }
         }
 
-        private static DayOfWeek DayOfWeekIntToEnum(int dow)
+        private static readonly IReadOnlyDictionary<int, DayOfWeek> IntToDOWMapping = new Dictionary<int, DayOfWeek>
         {
-            switch (dow)
-            {
-                case 1: return DayOfWeek.Sunday;
-                case 2: return DayOfWeek.Monday;
-                case 3: return DayOfWeek.Tuesday;
-                case 4: return DayOfWeek.Wednesday;
-                case 5: return DayOfWeek.Thursday;
-                case 6: return DayOfWeek.Friday;
-                case 7: return DayOfWeek.Saturday;
-            }
-            throw new ArgumentOutOfRangeException(nameof(dow), "Value must be between 1 and 7, inclusive");
-        }
+            { 1, DayOfWeek.Sunday },
+            { 2, DayOfWeek.Monday },
+            { 3, DayOfWeek.Tuesday },
+            { 4, DayOfWeek.Wednesday },
+            { 5, DayOfWeek.Thursday },
+            { 6, DayOfWeek.Friday },
+            { 7, DayOfWeek.Saturday }
+        };
 
         public override DateOnly CalculateDate(int inYear)
         {
-            DateOnly date = new DateOnly(inYear, Month, 1);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(inYear);
 
+            DateOnly date = new DateOnly(inYear, Month, 1);
             while (date.DayOfWeek != DayOfWeek)
             {
                 date = date.AddDays(1);

@@ -18,12 +18,11 @@ namespace Events
 
         public CalendarEvent(string identifier, CustomDate date, EventType type)
         {
-            if (identifier == null) throw new ArgumentNullException(nameof(identifier));
-            identifier = identifier.Trim();
-            if (identifier.Length == 0) throw new ArgumentException("Identifier is blank.", nameof(identifier));
-            Identifier = identifier;
+                ArgumentException.ThrowIfNullOrWhiteSpace(possessive);
+                Possessive = possessive.Trim();
+            }
 
-            if (date == null) throw new ArgumentNullException(nameof(date));
+            ArgumentNullException.ThrowIfNull(date);
             Date = date;
 
             Type = type;
