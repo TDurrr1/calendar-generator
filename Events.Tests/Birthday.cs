@@ -3,24 +3,28 @@ namespace Events.Test
 	public class Birthday
 	{
 		[Theory]
-		[InlineData("Tyler", 1996, 10, 3)]
-		[InlineData("Monica", null, 10, 19)]
-		public void Instantiation(string name, int? year, int month, int day)
+		[InlineData("Tyler", 1996, 10, 3, 2024, "Tyler’s 28th")]
+		[InlineData("Baby", 2025, 10, 3, 2024, "Baby’s -1st")]
+		[InlineData("Baby", 2024, 10, 3, 2024, "Baby’s 0th")]
+		[InlineData("Monica", null, 10, 19, 2024, "Monica’s")]
+		public void Instantiation(string name, int? year, int month, int day, int inYear, string expectedDesc)
 		{
 			var date = new Dates.StaticDate(year, month, day);
 			var birthday = new Events.Birthday(name, date);
 
 			Assert.Equal(name, birthday.Identifier);
-			Assert.Equal(new DateOnly(2024, month, day), birthday.Date.CalculateDate(2024));
-			if (year != null)
+			Assert.Equal(new DateOnly(inYear, month, day), birthday.Date.CalculateDate(inYear));
+			if (year.HasValue)
 			{
-				Assert.Equal(2024 - year, birthday.Date.AgeIn(2024));
+				Assert.Equal(inYear - year.Value, birthday.Date.AgeIn(inYear));
 			}
 			else
 			{
-				Assert.Null(birthday.Date.AgeIn(2024));
+				Assert.Null(birthday.Date.AgeIn(inYear));
 			}
 			Assert.Equal(EventType.Birthday, birthday.Type);
+
+			Assert.Equal(expectedDesc, birthday.Describe(inYear));
 		}
 
 		[Fact]

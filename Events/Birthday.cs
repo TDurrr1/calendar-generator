@@ -1,4 +1,5 @@
 ﻿using Dates;
+using Extensions;
 
 namespace Events
 {
@@ -17,6 +18,19 @@ namespace Events
 				ArgumentException.ThrowIfNullOrWhiteSpace(possessive);
 				Possessive = possessive.Trim();
 			}
+		}
+
+		public string Describe(int year)
+		{
+			var desc = Possessive;
+
+			var age = Date.AgeIn(year);
+			if (age.HasValue)
+			{
+				desc += " " + age.Value.AsOrdinal();
+			}
+
+			return desc;
 		}
 	}
 }
