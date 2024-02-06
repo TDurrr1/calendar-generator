@@ -1,4 +1,5 @@
-﻿
+﻿using Events;
+
 namespace State
 {
 	internal interface IAppState
