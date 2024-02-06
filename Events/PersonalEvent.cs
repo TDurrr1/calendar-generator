@@ -14,7 +14,7 @@ namespace Events
 
 		public string Possessive { get; protected init; }
 
-		public PersonalEvent(string name, CustomDate date, EventType eventType, string possessive = null) : base(name, date, eventType)
+		public PersonalEvent(string name, StaticDate date, EventType eventType, string possessive = null) : base(name, date, eventType)
 		{
 			if (!AllowedEventTypes.Contains(eventType))
 			{

@@ -4,7 +4,7 @@ namespace Events
 {
 	public class Death : PersonalEvent
 	{
-		public Death(string name, CustomDate date) : base(name, date, EventType.Death, null)
+		public Death(string name, StaticDate date) : base(name, date, EventType.Death, null)
 		{
 		}
 

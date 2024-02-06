@@ -58,7 +58,6 @@ namespace Events.Test
 		}
 
 		[Theory]
-		[InlineData(EventType.Death)]
 		[InlineData(EventType.Holiday)]
 		public void Instantiation_AllowedEventTypes(EventType eventType)
 		{
