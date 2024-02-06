@@ -5,8 +5,8 @@ namespace Dates
 {
 	public abstract class CustomDate : IParsable<CustomDate>
 	{
-		public int? Year { get; init; }
-		public int? Offset { get; init; }
+		public int? Year { get; protected init; }
+		public int? Offset { get; protected init; }
 
 		public int? AgeIn(int inYear)
 		{

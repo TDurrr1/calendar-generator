@@ -29,9 +29,9 @@ namespace Dates
 			Offset = offset;
 		}
 
-		public int Month { get; init; }
-		public int Instance { get; init; }
-		public DayOfWeek DayOfWeek { get; init; }
+		public int Month { get; protected init; }
+		public int Instance { get; protected init; }
+		public DayOfWeek DayOfWeek { get; protected init; }
 
 		public static new Regex RegEx = new Regex($"^(?<{nameof(Month)}>\\d{{2}})-N(?<{nameof(Instance)}>\\d)-(?<{nameof(DayOfWeek)}>\\d)(_(?<{nameof(Offset)}>[+-]?\\d{{1,3}}))?$", RegexOptions.ExplicitCapture & RegexOptions.Compiled);
 

@@ -30,9 +30,9 @@ namespace Dates
 			LeapDayAdjustment = lda;
 		}
 
-		public int Month { get; init; }
-		public int Day { get; init; }
-		public LeapDayAdjustment LeapDayAdjustment { get; init; }
+		public int Month { get; protected init; }
+		public int Day { get; protected init; }
+		public LeapDayAdjustment LeapDayAdjustment { get; protected init; }
 
 		public static new Regex RegEx = new Regex($"^((?<{nameof(Year)}>\\d{{4}})-)?(?<{nameof(Month)}>\\d{{2}})-(?<{nameof(Day)}>\\d{{2}})(_(?<{nameof(Offset)}>[+-]?\\d{{1,3}}))?$", RegexOptions.ExplicitCapture & RegexOptions.Compiled);
 
