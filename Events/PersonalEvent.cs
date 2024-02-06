@@ -5,10 +5,21 @@ namespace Events
 {
 	public class PersonalEvent : CalendarEvent
 	{
+		public static readonly IReadOnlySet<EventType> AllowedEventTypes = new HashSet<EventType>
+		{
+			EventType.Birthday,
+			EventType.Marriage
+		};
+
 		public string Possessive { get; protected init; }
 
 		public PersonalEvent(string name, CustomDate date, EventType eventType, string possessive = null) : base(name, date, eventType)
 		{
+			if (!AllowedEventTypes.Contains(eventType))
+			{
+				throw new ArgumentException(nameof(eventType));
+			}
+
 			if (possessive == null)
 			{
 				Possessive = Identifier + "’s";

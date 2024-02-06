@@ -56,5 +56,19 @@ namespace Events.Test
 				var birthday = new Events.PersonalEvent(name, null, EventType.Birthday);
 			});
 		}
+
+		[Theory]
+		[InlineData(EventType.Death)]
+		[InlineData(EventType.Holiday)]
+		public void Instantiation_AllowedEventTypes(EventType eventType)
+		{
+			var name = "Tyler";
+			var date = new Dates.StaticDate(1996, 10, 3);
+
+			Assert.Throws<ArgumentException>(() =>
+			{
+				var birthday = new Events.PersonalEvent(name, date, eventType);
+			});
+		}
 	}
 }
