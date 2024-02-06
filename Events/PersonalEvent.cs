@@ -8,7 +8,8 @@ namespace Events
 		public static readonly IReadOnlySet<EventType> AllowedEventTypes = new HashSet<EventType>
 		{
 			EventType.Birthday,
-			EventType.Marriage
+			EventType.Marriage,
+			EventType.Death
 		};
 
 		public string Possessive { get; protected init; }
