@@ -8,6 +8,14 @@ namespace Dates
 		public int? Year { get; protected init; }
 		public int? Offset { get; protected init; }
 
+		protected CustomDate(int ? year, int? offset)
+		{
+			if (year.HasValue) ArgumentOutOfRangeException.ThrowIfNegativeOrZero(year.Value);
+			Year = year;
+
+			Offset = offset;
+		}
+
 		public int? AgeIn(int inYear)
 		{
 			if (!Year.HasValue) return null;

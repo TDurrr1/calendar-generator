@@ -1,5 +1,4 @@
-﻿using Extensions;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -7,15 +6,14 @@ namespace Dates
 {
 	public class FloatingDate : CustomDate
 	{
-		public FloatingDate(int month, int instance, int dayOfWeek, int? offset = 0)
-			: this(month, instance, DayOfWeek.Sunday, offset)
+		public FloatingDate(int month, int instance, int dayOfWeek, int? offset = 0): this(month, instance, DayOfWeek.Sunday, offset)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(dayOfWeek);
 			ArgumentOutOfRangeException.ThrowIfGreaterThan(dayOfWeek, 7);
 			DayOfWeek = IntToDOWMapping[dayOfWeek];
 		}
 
-		public FloatingDate(int month, int instance, DayOfWeek dayOfWeek, int? offset = 0)
+		public FloatingDate(int month, int instance, DayOfWeek dayOfWeek, int? offset = 0): base(null, offset)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(month);
 			ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
@@ -25,8 +23,6 @@ namespace Dates
 			Instance = instance;
 
 			DayOfWeek = dayOfWeek;
-
-			Offset = offset;
 		}
 
 		public int Month { get; protected init; }

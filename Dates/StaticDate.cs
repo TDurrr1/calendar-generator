@@ -1,5 +1,4 @@
-﻿using Extensions;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -7,11 +6,8 @@ namespace Dates
 {
 	public class StaticDate : CustomDate
 	{
-		public StaticDate(int? year, int month, int day, int? offset = 0, LeapDayAdjustment lda = LeapDayAdjustment.March1)
+		public StaticDate(int? year, int month, int day, int? offset = 0, LeapDayAdjustment lda = LeapDayAdjustment.March1) : base(year, offset)
 		{
-			if (year.HasValue) ArgumentOutOfRangeException.ThrowIfNegativeOrZero(year.Value);
-			Year = year;
-
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(month);
 			ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
 			Month = month;
@@ -24,8 +20,6 @@ namespace Dates
 			).AddDays(-1).Day;
 			ArgumentOutOfRangeException.ThrowIfGreaterThan(day, maxDay);
 			Day = day;
-
-			Offset = offset;
 
 			LeapDayAdjustment = lda;
 		}
