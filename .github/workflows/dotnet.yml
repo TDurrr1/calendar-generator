@@ -9,7 +9,8 @@ on:
 
 jobs:
   build:
-
+    name: .NET Test
+    
     runs-on: ubuntu-latest
 
     steps:
