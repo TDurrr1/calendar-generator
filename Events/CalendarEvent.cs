@@ -12,9 +12,9 @@ namespace Events
 
 	public abstract class CalendarEvent
 	{
-		public string Identifier { get; init; }
-		public CustomDate Date { get; init; }
-		public EventType Type { get; init; }
+		public string Identifier { get; protected init; }
+		public CustomDate Date { get; protected init; }
+		public EventType Type { get; protected init; }
 
 		public CalendarEvent(string identifier, CustomDate date, EventType type)
 		{
@@ -27,5 +27,6 @@ namespace Events
 
 			Type = type;
 		}
+		public abstract string Describe(int year);
 	}
 }

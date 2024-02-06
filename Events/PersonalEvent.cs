@@ -3,11 +3,11 @@ using Extensions;
 
 namespace Events
 {
-	public class Birthday : CalendarEvent
+	public class PersonalEvent : CalendarEvent
 	{
-		public string Possessive { get; init; }
+		public string Possessive { get; protected init; }
 
-		public Birthday(string name, CustomDate date, string possessive = null) : base(name, date, EventType.Birthday)
+		public PersonalEvent(string name, CustomDate date, EventType eventType, string possessive = null) : base(name, date, eventType)
 		{
 			if (possessive == null)
 			{
@@ -20,7 +20,7 @@ namespace Events
 			}
 		}
 
-		public string Describe(int year)
+		public override string Describe(int year)
 		{
 			var desc = Possessive;
 
