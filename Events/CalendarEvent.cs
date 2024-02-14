@@ -13,16 +13,15 @@ namespace Events
 	public abstract class CalendarEvent
 	{
 		public string Identifier { get; protected init; }
-		public CustomDate Date { get; protected init; }
+		public CustomDate? Date { get; protected init; }
 		public EventType Type { get; protected init; }
 
-		public CalendarEvent(string identifier, CustomDate date, EventType type)
+		public CalendarEvent(string identifier, CustomDate? date, EventType type)
 		{
 			ArgumentNullException.ThrowIfNull(identifier);
 			ArgumentException.ThrowIfNullOrWhiteSpace(identifier);
 			Identifier = identifier.Trim();
 
-			ArgumentNullException.ThrowIfNull(date);
 			Date = date;
 
 			Type = type;
