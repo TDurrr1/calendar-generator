@@ -5,7 +5,8 @@ namespace Events
 {
 	public class Holiday : CalendarEvent
 	{
-		public new CustomDate? Date { get; set; }
+		private CustomDate? _Date = null;
+		public new CustomDate? Date { get => _Date ?? base.Date; set => _Date = value; }
 
 		public Holiday(string name, CustomDate? date) : base(name, date, EventType.Holiday)
 		{
