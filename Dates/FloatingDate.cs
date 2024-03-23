@@ -89,7 +89,8 @@ namespace Dates
 			{ 7, DayOfWeek.Saturday }
 		};
 
-		public override DateOnly CalculateDate(int inYear)
+		[return: NotNull]
+		public override DateOnly? CalculateDate(int inYear)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(inYear);
 

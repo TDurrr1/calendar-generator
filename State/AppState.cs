@@ -2,7 +2,7 @@
 
 namespace State
 {
-	internal interface IAppState
+	public interface IAppState
 	{
 		public string EventCsvData { set; }
 		public IEnumerable<CalendarEvent> Events { get; }
@@ -10,7 +10,7 @@ namespace State
 		public event Action<string>? OnEventCsvDataChanged;
 	}
 
-	internal class AppState : IAppState
+	public class AppState : IAppState
 	{
 		public string EventCsvData
 		{

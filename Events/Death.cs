@@ -1,10 +1,11 @@
 ﻿using Dates;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Events
 {
 	public class Death : PersonalEvent
 	{
-		public Death(string name, StaticDate date) : base(name, date, EventType.Death, null)
+		public Death([NotNull] string name, [NotNull] StaticDate date) : base(name, date, EventType.Death, null)
 		{
 			ArgumentNullException.ThrowIfNull(date);
 		}

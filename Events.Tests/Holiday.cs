@@ -14,7 +14,7 @@ namespace Events.Test
 			CustomDate date = (dateStr.Contains("N") ? FloatingDate.Parse(dateStr) : StaticDate.Parse(dateStr));
 			var holiday = new Events.Holiday(name, date);
 
-			Assert.Equal(expectedDate, holiday.Date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
+			Assert.Equal(expectedDate, holiday.Date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd"));
 			Assert.Equal(expectedDesc, holiday.Describe(inYear));
 		}
 

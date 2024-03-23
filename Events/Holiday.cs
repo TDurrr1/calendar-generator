@@ -1,14 +1,16 @@
 ﻿using Dates;
 using Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Events
 {
 	public class Holiday : CalendarEvent
 	{
-		private CustomDate? _Date = null;
-		public new CustomDate? Date { get => _Date ?? base.Date; set => _Date = value; }
+		private CustomDate? _Date;
+		[NotNull]
+		public new CustomDate Date { get => _Date ?? base.Date; set => _Date = value; }
 
-		public Holiday(string name, CustomDate? date) : base(name, date, EventType.Holiday)
+		public Holiday([NotNull] string name, [NotNull] CustomDate date) : base(name, date, EventType.Holiday)
 		{
 		}
 

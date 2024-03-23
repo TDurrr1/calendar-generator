@@ -22,7 +22,7 @@ namespace ICustomDate
 		public void WithYear(int year, int month, int day, int? offset, string expected)
 		{
 			var date = new Dates.StaticDate(year, month, day, offset);
-			Assert.Equal(expected, date.CalculateDate(year).ToString("yyyy-MM-dd"));
+			Assert.Equal(expected, date.CalculateDate(year).Value.ToString("yyyy-MM-dd"));
 		}
 
 		[Theory]
@@ -41,7 +41,7 @@ namespace ICustomDate
 		public void WithoutYear(int month, int day, int? offset, int inYear, string expected)
 		{
 			var date = new Dates.StaticDate(null, month, day, offset);
-			Assert.Equal(expected, date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
+			Assert.Equal(expected, date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd"));
 		}
 
 		[Theory]
@@ -91,7 +91,7 @@ namespace ICustomDate
 			}
 			else
 			{
-				Assert.Equal(expected, date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
+				Assert.Equal(expected, date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd"));
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace ICustomDate
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
 			{
 				var date = new Dates.StaticDate(year, month, day);
-				var str = date.CalculateDate(inYear).ToString("yyyy-MM-dd");
+				var str = date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd");
 			});
 		}
 
@@ -154,7 +154,7 @@ namespace ICustomDate
 		public void Parse(string input, int inYear, string expectedStr, int? expectedAge)
 		{
 			var date = Dates.StaticDate.Parse(input, CultureInfo.CurrentCulture);
-			Assert.Equal(expectedStr, date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
+			Assert.Equal(expectedStr, date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd"));
 			Assert.Equal(expectedAge, date.AgeIn(inYear));
 		}
 
