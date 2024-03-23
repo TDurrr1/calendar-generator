@@ -22,7 +22,6 @@ namespace Events
 			ArgumentException.ThrowIfNullOrWhiteSpace(identifier);
 			Identifier = identifier.Trim();
 
-			ArgumentNullException.ThrowIfNull(date);
 			Date = date;
 
 			Type = type;

@@ -22,7 +22,7 @@ namespace Dates
 			return inYear - Year.Value;
 		}
 
-		public abstract DateOnly CalculateDate(int inYear);
+		public abstract DateOnly? CalculateDate(int inYear);
 
 		// TylerTODO: Implement these
 		public static Regex RegEx { get { throw new NotImplementedException(); } }

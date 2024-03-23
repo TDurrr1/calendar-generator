@@ -14,7 +14,7 @@ namespace Events.Test
 			CustomDate date = (dateStr.Contains("N") ? FloatingDate.Parse(dateStr) : StaticDate.Parse(dateStr));
 			var holiday = new Events.Holiday(name, date);
 
-			Assert.Equal(expectedDate, holiday.Date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
+			Assert.Equal(expectedDate, holiday.Date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd"));
 			Assert.Equal(expectedDesc, holiday.Describe(inYear));
 		}
 
@@ -38,14 +38,19 @@ namespace Events.Test
 		}
 
 		[Fact]
-		public void Instantiation_RequiresNonNullDate()
+		public void Instantiation_AllowsNullDate()
 		{
-			var name = "Tyler";
+			var holiday = new Events.Holiday("Tyler", null);
+		}
 
-			Assert.Throws<ArgumentNullException>(() =>
-			{
-				var holiday = new Events.Holiday(name, null);
-			});
+		[Fact]
+		public void DateCanBeSetAfterInstantiation()
+		{
+			var holiday = new Events.Holiday("Easter", null);
+			Assert.Null(holiday.Date?.CalculateDate(2024));
+
+			holiday.Date = new StaticDate(null, 3, 31);
+			Assert.Equal(new DateOnly(2024, 3, 31), holiday.Date.CalculateDate(2024));
 		}
 	}
 }

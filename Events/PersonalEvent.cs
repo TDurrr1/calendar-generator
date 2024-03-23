@@ -1,5 +1,6 @@
 ﻿using Dates;
 using Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Events
 {
@@ -14,8 +15,10 @@ namespace Events
 
 		public string Possessive { get; protected init; }
 
-		public PersonalEvent(string name, StaticDate date, EventType eventType, string possessive = null) : base(name, date, eventType)
+		public PersonalEvent([NotNull] string name, [NotNull] StaticDate date, [NotNull] EventType eventType, string possessive = null) : base(name, date, eventType)
 		{
+			ArgumentNullException.ThrowIfNull(date);
+
 			if (!AllowedEventTypes.Contains(eventType))
 			{
 				throw new ArgumentException(nameof(eventType));
@@ -35,8 +38,8 @@ namespace Events
 		public override string Describe(int year)
 		{
 			var desc = Possessive;
+			var age = Date?.AgeIn(year);
 
-			var age = Date.AgeIn(year);
 			if (age.HasValue)
 			{
 				desc += " " + age.Value.AsOrdinal();

@@ -22,7 +22,7 @@ namespace ICustomDate
 		public void Instantiation(int month, int instance, int dayOfWeek, int? offset, int inYear, string expected)
 		{
 			var date = new Dates.FloatingDate(month, instance, dayOfWeek, offset);
-			Assert.Equal(expected, date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
+			Assert.Equal(expected, date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd"));
 		}
 
 		[Theory]
@@ -37,7 +37,7 @@ namespace ICustomDate
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
 			{
 				var date = new Dates.FloatingDate(month, instance, dayOfWeek, offset);
-				var str = date.CalculateDate(inYear).ToString("yyyy-MM-dd");
+				var str = date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd");
 			});
 		}
 
@@ -61,7 +61,7 @@ namespace ICustomDate
 		public void Parse(string input, int inYear, string expectedStr, int? expectedAge)
 		{
 			var date = Dates.FloatingDate.Parse(input, CultureInfo.CurrentCulture);
-			Assert.Equal(expectedStr, date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
+			Assert.Equal(expectedStr, date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd"));
 			Assert.Equal(expectedAge, date.AgeIn(inYear));
 		}
 
