@@ -4,7 +4,7 @@ namespace Events
 {
 	public enum EventType
 	{
-		Birthday,
+		Birth,
 		Death,
 		Marriage,
 		Holiday

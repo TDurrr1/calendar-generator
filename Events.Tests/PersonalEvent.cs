@@ -10,7 +10,7 @@ namespace Events.Test
 		public void Instantiation(string name, int? year, int month, int day, string possessive, int inYear, string expectedDesc)
 		{
 			var date = new Dates.StaticDate(year, month, day);
-			var personalEvent = new Events.PersonalEvent(name, date, EventType.Birthday, possessive);
+			var personalEvent = new Events.PersonalEvent(name, date, EventType.Birth, possessive);
 
 			Assert.Equal(name, personalEvent.Identifier);
 			Assert.Equal(new DateOnly(inYear, month, day), personalEvent.Date.CalculateDate(inYear));
@@ -22,7 +22,7 @@ namespace Events.Test
 			{
 				Assert.Null(personalEvent.Date.AgeIn(inYear));
 			}
-			Assert.Equal(EventType.Birthday, personalEvent.Type);
+			Assert.Equal(EventType.Birth, personalEvent.Type);
 
 			Assert.Equal(expectedDesc, personalEvent.Describe(inYear));
 		}
@@ -34,15 +34,15 @@ namespace Events.Test
 
 			Assert.Throws<ArgumentNullException>(() =>
 			{
-				var birthday = new Events.PersonalEvent(null, date, EventType.Birthday);
+				var birthday = new Events.PersonalEvent(null, date, EventType.Birth);
 			});
 			Assert.Throws<ArgumentException>(() =>
 			{
-				var birthday = new Events.PersonalEvent(string.Empty, date, EventType.Birthday);
+				var birthday = new Events.PersonalEvent(string.Empty, date, EventType.Birth);
 			});
 			Assert.Throws<ArgumentException>(() =>
 			{
-				var birthday = new Events.PersonalEvent("   ", date, EventType.Birthday);
+				var birthday = new Events.PersonalEvent("   ", date, EventType.Birth);
 			});
 		}
 
@@ -53,7 +53,7 @@ namespace Events.Test
 
 			Assert.Throws<ArgumentNullException>(() =>
 			{
-				var birthday = new Events.PersonalEvent(name, null, EventType.Birthday);
+				var birthday = new Events.PersonalEvent(name, null, EventType.Birth);
 			});
 		}
 

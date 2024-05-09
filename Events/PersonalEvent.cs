@@ -8,7 +8,7 @@ namespace Events
 	{
 		public static readonly IReadOnlySet<EventType> AllowedEventTypes = new HashSet<EventType>
 		{
-			EventType.Birthday,
+			EventType.Birth,
 			EventType.Marriage,
 			EventType.Death
 		};
