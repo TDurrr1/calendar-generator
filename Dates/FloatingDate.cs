@@ -4,56 +4,68 @@ using System.Text.RegularExpressions;
 
 namespace Dates
 {
-	public class FloatingDate : CustomDate
+	public class FloatingDate : CustomDate, IParsable<FloatingDate>
 	{
-		public FloatingDate(int month, int instance, int dayOfWeek, int? offset = 0): this(month, instance, DayOfWeek.Sunday, offset)
+		public int Month { get; protected init; }
+		public int Instance { get; protected init; }
+		public DayOfWeek DayOfWeek { get; protected init; }
+
+		public FloatingDate(int? year, int month, int instance, int dayOfWeek, int offset = 0) : this(year, month, instance, DayOfWeek.Sunday, offset)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(dayOfWeek);
 			ArgumentOutOfRangeException.ThrowIfGreaterThan(dayOfWeek, 7);
 			DayOfWeek = IntToDOWMapping[dayOfWeek];
 		}
 
-		public FloatingDate(int month, int instance, DayOfWeek dayOfWeek, int? offset = 0): base(null, offset)
+		public FloatingDate(int? year, int month, int instance, DayOfWeek dayOfWeek, int offset = 0) : base(year, offset)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(month);
 			ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
 			Month = month;
 
-			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(instance);
+			ArgumentOutOfRangeException.ThrowIfLessThan(instance, -1);
+			ArgumentOutOfRangeException.ThrowIfZero(instance);
 			Instance = instance;
 
 			DayOfWeek = dayOfWeek;
 		}
 
-		public int Month { get; protected init; }
-		public int Instance { get; protected init; }
-		public DayOfWeek DayOfWeek { get; protected init; }
-
-		public static new Regex RegEx = new Regex($"^(?<{nameof(Month)}>\\d{{2}})-N(?<{nameof(Instance)}>\\d)-(?<{nameof(DayOfWeek)}>\\d)(_(?<{nameof(Offset)}>[+-]?\\d{{1,3}}))?$", RegexOptions.ExplicitCapture & RegexOptions.Compiled);
-
-		public static new FloatingDate Parse(string s, IFormatProvider? provider = null)
+		public FloatingDate(int month, int instance, int dayOfWeek, int offset = 0) : this(null, month, instance, dayOfWeek, offset)
 		{
-			ArgumentNullException.ThrowIfNull(s);
+		}
+
+		public FloatingDate(int month, int instance, DayOfWeek dayOfWeek, int offset = 0) : this(null, month, instance, dayOfWeek, offset)
+		{
+		}
+
+		public static Regex RegEx = new Regex($"^((?<{nameof(Year)}>\\d{{4}})-)?(?<{nameof(Month)}>\\d{{2}})-N(?<{nameof(Instance)}>\\d|L)-(?<{nameof(DayOfWeek)}>\\d)(_(?<{nameof(Offset)}>[+-]?\\d{{1,3}}))?$", RegexOptions.ExplicitCapture & RegexOptions.Compiled);
+
+		public static new FloatingDate Parse([DisallowNull] string s, IFormatProvider? provider)
+		{
 			if (!RegEx.IsMatch(s)) throw new FormatException();
 
 			provider ??= CultureInfo.CurrentCulture;
 
 			var groups = RegEx.Match(s).Groups;
 
+			var year = groups[nameof(Year)].Value;
 			var month = groups[nameof(Month)].Value;
 			var instance = groups[nameof(Instance)].Value;
 			var dayOfWeek = groups[nameof(DayOfWeek)].Value;
 			var offset = groups[nameof(Offset)].Value;
 
+			if (year == string.Empty) year = null;
+			if (instance == "L") instance = "-1";
 			if (offset == string.Empty) offset = null;
 
 			try
 			{
 				return new FloatingDate(
+					year != null ? int.Parse(year) : null,
 					int.Parse(month),
 					int.Parse(instance),
 					int.Parse(dayOfWeek),
-					offset != null ? int.Parse(offset) : null
+					offset != null ? int.Parse(offset) : 0
 				);
 			}
 			catch (ArgumentException e)
@@ -62,7 +74,7 @@ namespace Dates
 			}
 		}
 
-		public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out FloatingDate result)
+		public static bool TryParse(string? s, IFormatProvider? provider, [NotNullWhen(true), MaybeNullWhen(false)] out FloatingDate result)
 		{
 			provider ??= CultureInfo.CurrentCulture;
 			result = null;
@@ -89,8 +101,7 @@ namespace Dates
 			{ 7, DayOfWeek.Saturday }
 		};
 
-		[return: NotNull]
-		public override DateOnly? CalculateDate(int inYear)
+		public override DateOnly CalculateDate(int inYear)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(inYear);
 
@@ -99,7 +110,18 @@ namespace Dates
 			{
 				date = date.AddDays(1);
 			}
-			date = date.AddDays((Instance - 1) * 7).AddDays(Offset ?? 0);
+
+			if (Instance != -1)
+			{
+				date = date.AddDays((Instance - 1) * 7).AddDays(Offset);
+			}
+			else
+			{
+				do
+				{
+					date = date.AddDays(7);
+				} while (date.AddDays(7).Month == date.Month);
+			}
 
 			return date;
 		}

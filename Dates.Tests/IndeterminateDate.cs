@@ -1,7 +1,7 @@
 using Dates;
 using System.Globalization;
 
-namespace ICustomDate
+namespace CustomDate
 {
 	public class IndeterminateDate
 	{
@@ -9,7 +9,7 @@ namespace ICustomDate
 		public void HappyPath()
 		{
 			var date = new Dates.IndeterminateDate("Note here");
-			Assert.Null(date.CalculateDate(2024));
+			Assert.Throws<NotImplementedException>(() => date.CalculateDate(2024));
 		}
 
 		[Theory]

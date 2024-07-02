@@ -1,43 +1,43 @@
 using System.Globalization;
 
-namespace ICustomDate
+namespace CustomDate
 {
 	public class FloatingDate
 	{
 		[Theory]
-		[InlineData(10, 1, 5, null, 1996, "1996-10-03")]
-		[InlineData(10, 3, 5, null, 1995, "1995-10-19")]
-		[InlineData(10, 1, 5, 1, 1996, "1996-10-04")]
-		[InlineData(10, 3, 5, 1, 1995, "1995-10-20")]
-		[InlineData(10, 1, 5, -1, 1996, "1996-10-02")]
-		[InlineData(10, 3, 5, -1, 1995, "1995-10-18")]
-		[InlineData(1, 1, 2, null, 2024, "2024-01-01")]
-		[InlineData(1, 1, 2, -1, 2024, "2023-12-31")]
-		[InlineData(12, 5, 1, 1, 2023, "2024-01-01")]
-		[InlineData(2, 4, 4, 1, 2024, "2024-02-29")]
-		[InlineData(3, 1, 7, -1, 2025, "2025-02-28")]
-		[InlineData(2, 10, 1, -1, 2024, "2024-04-06")]
-		[InlineData(2, 10, 1, null, 2024, "2024-04-07")]
-		[InlineData(2, 10, 1, 1, 2024, "2024-04-08")]
-		public void Instantiation(int month, int instance, int dayOfWeek, int? offset, int inYear, string expected)
+		[InlineData(10,  1, 5,  0, 1996, "1996-10-03")]
+		[InlineData(10,  3, 5,  0, 1995, "1995-10-19")]
+		[InlineData(10,  1, 5,  1, 1996, "1996-10-04")]
+		[InlineData(10,  3, 5,  1, 1995, "1995-10-20")]
+		[InlineData(10,  1, 5, -1, 1996, "1996-10-02")]
+		[InlineData(10,  3, 5, -1, 1995, "1995-10-18")]
+		[InlineData( 1,  1, 2,  0, 2024, "2024-01-01")]
+		[InlineData( 1,  1, 2, -1, 2024, "2023-12-31")]
+		[InlineData(12,  5, 1,  1, 2023, "2024-01-01")]
+		[InlineData( 2,  4, 4,  1, 2024, "2024-02-29")]
+		[InlineData( 3,  1, 7, -1, 2025, "2025-02-28")]
+		[InlineData( 2, 10, 1, -1, 2024, "2024-04-06")]
+		[InlineData( 2, 10, 1,  0, 2024, "2024-04-07")]
+		[InlineData( 2, 10, 1,  1, 2024, "2024-04-08")]
+		public void Instantiation(int month, int instance, int dayOfWeek, int offset, int inYear, string expected)
 		{
 			var date = new Dates.FloatingDate(month, instance, dayOfWeek, offset);
-			Assert.Equal(expected, date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd"));
+			Assert.Equal(expected, date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
 		}
 
 		[Theory]
-		[InlineData(0, 1, 1, null, 2024)]
-		[InlineData(13, 1, 1, null, 2024)]
-		[InlineData(1, 0, 1, null, 2024)]
-		[InlineData(1, 1, 0, null, 2024)]
-		[InlineData(1, 1, 8, null, 2024)]
-		[InlineData(1, 1, 1, null, 0)]
-		public void Exceptions(int month, int instance, int dayOfWeek, int? offset, int inYear)
+		[InlineData( 0, 1, 1, 0, 2024)]
+		[InlineData(13, 1, 1, 0, 2024)]
+		[InlineData( 1, 0, 1, 0, 2024)]
+		[InlineData( 1, 1, 0, 0, 2024)]
+		[InlineData( 1, 1, 8, 0, 2024)]
+		[InlineData( 1, 1, 1, 0,    0)]
+		public void Exceptions(int month, int instance, int dayOfWeek, int offset, int inYear)
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
 			{
 				var date = new Dates.FloatingDate(month, instance, dayOfWeek, offset);
-				var str = date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd");
+				var str = date.CalculateDate(inYear).ToString("yyyy-MM-dd");
 			});
 		}
 
@@ -61,17 +61,8 @@ namespace ICustomDate
 		public void Parse(string input, int inYear, string expectedStr, int? expectedAge)
 		{
 			var date = Dates.FloatingDate.Parse(input, CultureInfo.CurrentCulture);
-			Assert.Equal(expectedStr, date.CalculateDate(inYear).Value.ToString("yyyy-MM-dd"));
+			Assert.Equal(expectedStr, date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
 			Assert.Equal(expectedAge, date.AgeIn(inYear));
-		}
-
-		[Fact]
-		public void Parse_ArgumentNullExceptions()
-		{
-			Assert.Throws<ArgumentNullException>(() =>
-			{
-				var date = Dates.FloatingDate.Parse(null);
-			});
 		}
 
 		[Theory]
@@ -88,7 +79,7 @@ namespace ICustomDate
 		{
 			Assert.Throws<FormatException>(() =>
 			{
-				var date = Dates.FloatingDate.Parse(input);
+				var date = Dates.FloatingDate.Parse(input, CultureInfo.CurrentCulture);
 			});
 		}
 
@@ -102,7 +93,7 @@ namespace ICustomDate
 		{
 			Assert.Throws<OverflowException>(() =>
 			{
-				var date = Dates.FloatingDate.Parse(input);
+				var date = Dates.FloatingDate.Parse(input, CultureInfo.CurrentCulture);
 			});
 		}
 

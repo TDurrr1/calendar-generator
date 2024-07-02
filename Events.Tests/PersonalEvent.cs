@@ -58,7 +58,7 @@ namespace Events.Test
 		}
 
 		[Theory]
-		[InlineData(EventType.Holiday)]
+		[InlineData(EventType.Observance)]
 		public void Instantiation_AllowedEventTypes(EventType eventType)
 		{
 			var name = "Tyler";

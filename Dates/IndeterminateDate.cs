@@ -4,18 +4,19 @@ using System.Text.RegularExpressions;
 
 namespace Dates
 {
-	public class IndeterminateDate : CustomDate
+	public class IndeterminateDate : CustomDate, IParsable<IndeterminateDate>
 	{
-		public IndeterminateDate([NotNull] string note): base(null, null)
+		public IndeterminateDate([NotNull] string note): base(null)
 		{
 			ArgumentNullException.ThrowIfNull(note);
 			ArgumentException.ThrowIfNullOrWhiteSpace(note);
 			Note = note;
 		}
 
+		public static Regex RegEx = new Regex($"^!(?<{nameof(Note)}>.+)$");
 		public string Note { get; protected init; }
 
-		public static new IndeterminateDate Parse(string s, IFormatProvider? provider = null)
+		public static new IndeterminateDate Parse([DisallowNull] string s, IFormatProvider? provider = null)
 		{
 			ArgumentNullException.ThrowIfNull(s);
 			if (!s.StartsWith('!')) throw new FormatException();
@@ -31,7 +32,7 @@ namespace Dates
 			}
 		}
 
-		public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out IndeterminateDate result)
+		public static bool TryParse(string? s, IFormatProvider? provider, [NotNullWhen(true), MaybeNullWhen(false)] out IndeterminateDate result)
 		{
 			provider ??= CultureInfo.CurrentCulture;
 			result = null;
@@ -47,11 +48,10 @@ namespace Dates
 			}
 		}
 
-		public override DateOnly? CalculateDate(int inYear)
+		public override DateOnly CalculateDate(int inYear)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(inYear);
-
-			return null;
+			throw new NotImplementedException("Cannot calculate indeterminate date");
 		}
 	}
 }

@@ -1,4 +1,6 @@
 ﻿using Dates;
+using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Events
 {
@@ -7,12 +9,13 @@ namespace Events
 		Birth,
 		Death,
 		Marriage,
-		Holiday
+		Observance
 	}
 
 	public abstract class CalendarEvent
 	{
 		public string Identifier { get; protected init; }
+		public string Possessive { get; protected init; }
 		public CustomDate Date { get; protected init; }
 		public EventType Type { get; protected init; }
 
@@ -26,6 +29,7 @@ namespace Events
 
 			Type = type;
 		}
+
 		public abstract string Describe(int year);
 	}
 }

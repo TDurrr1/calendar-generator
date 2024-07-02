@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace Dates
 {
-	public class StaticDate : CustomDate
+	public class StaticDate : CustomDate, IParsable<StaticDate>
 	{
-		public StaticDate(int? year, int month, int day, int? offset = 0, LeapDayAdjustment lda = LeapDayAdjustment.March1) : base(year, offset)
+		public StaticDate(int? year, int month, int day, int offset = 0, LeapDayAdjustment lda = LeapDayAdjustment.March1) : base(year, offset)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(month);
 			ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
@@ -28,9 +28,9 @@ namespace Dates
 		public int Day { get; protected init; }
 		public LeapDayAdjustment LeapDayAdjustment { get; protected init; }
 
-		public static new Regex RegEx = new Regex($"^((?<{nameof(Year)}>\\d{{4}})-)?(?<{nameof(Month)}>\\d{{2}})-(?<{nameof(Day)}>\\d{{2}})(_(?<{nameof(Offset)}>[+-]?\\d{{1,3}}))?$", RegexOptions.ExplicitCapture & RegexOptions.Compiled);
+		public static Regex RegEx = new Regex($"^((?<{nameof(Year)}>\\d{{4}})-)?(?<{nameof(Month)}>\\d{{2}})-(?<{nameof(Day)}>\\d{{2}})(_(?<{nameof(Offset)}>[+-]?\\d{{1,3}}))?$", RegexOptions.ExplicitCapture & RegexOptions.Compiled);
 
-		public static new StaticDate Parse(string s, IFormatProvider? provider = null)
+		public static new StaticDate Parse([DisallowNull] string s, IFormatProvider? provider = null)
 		{
 			ArgumentNullException.ThrowIfNull(s);
 			if (!RegEx.IsMatch(s)) throw new FormatException();
@@ -53,7 +53,7 @@ namespace Dates
 					 year != null ? int.Parse(year) : null,
 					 int.Parse(month),
 					 int.Parse(day),
-					 offset != null ? int.Parse(offset) : null,
+					 offset != null ? int.Parse(offset) : 0,
 					 LeapDayAdjustment.ThrowException
 				);
 			}
@@ -63,7 +63,7 @@ namespace Dates
 			}
 		}
 
-		public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out StaticDate result)
+		public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [NotNullWhen(true), MaybeNullWhen(false)] out StaticDate result)
 		{
 			provider ??= CultureInfo.CurrentCulture;
 			result = null;
@@ -79,8 +79,7 @@ namespace Dates
 			}
 		}
 
-		[return: NotNull]
-		public override DateOnly? CalculateDate(int inYear)
+		public override DateOnly CalculateDate(int inYear)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(inYear);
 
@@ -105,7 +104,7 @@ namespace Dates
 				}
 			}
 
-			return new DateOnly(inYear, month, day).AddDays(Offset ?? 0);
+			return new DateOnly(inYear, month, day).AddDays(Offset);
 		}
 	}
 
