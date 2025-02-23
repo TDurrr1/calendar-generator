@@ -1,33 +1,29 @@
 ﻿using Dates;
 using Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Events
 {
 	public class Observance : CalendarEvent
 	{
-		private CustomDate? _Date;
-
-		[NotNull]
-		public new CustomDate Date
-		{ 
-			get => _Date;
-			set => _Date = value;
+		public Observance(string defaultPossessive, CustomDate date, bool ignoreAge = false) : base(EventType.Observance, defaultPossessive, date, null, ignoreAge)
+		{
 		}
 
-		public Observance([NotNull] string name, [NotNull] CustomDate date) : base(name, date, EventType.Observance)
+		public Observance(string defaultPossessive, string calculationDescription, bool ignoreAge = false) : base(EventType.Observance, defaultPossessive, calculationDescription, null, ignoreAge)
 		{
-			_Date = base.Date;
 		}
 
-		public override string Describe(int year)
+		public override string Describe(int inYear, CalendarVersionName version)
 		{
-			var desc = Identifier;
-			var age = Date?.AgeIn(year);
+			var desc = DefaultIdentifier;
 
-			if (age.HasValue)
+			if (!IgnoreAge)
 			{
-				desc = (age.Value + 1).AsOrdinal() + " annual " + desc;
+				var age = Date.AgeIn(inYear);
+				if (age.HasValue)
+				{
+					desc = (age.Value + 1).AsOrdinal() + " annual " + desc;
+				}
 			}
 
 			return desc;

@@ -44,54 +44,54 @@ namespace CustomDate
 		}
 
 		[Theory]
-		[InlineData(2024,  0, LeapDayAdjustment.March1,         2028, "2028-02-29")]
-		[InlineData(2024,  0, LeapDayAdjustment.February28,     2028, "2028-02-29")]
-		[InlineData(2024,  0, LeapDayAdjustment.ThrowException, 2028, "2028-02-29")]
-		[InlineData(2024,  0, LeapDayAdjustment.March1,         2025, "2025-03-01")]
-		[InlineData(2024,  0, LeapDayAdjustment.February28,     2025, "2025-02-28")]
-		[InlineData(2024,  0, LeapDayAdjustment.ThrowException, 2025,         null)]
-		[InlineData(2024,  1, LeapDayAdjustment.March1,         2028, "2028-03-01")]
-		[InlineData(2024,  1, LeapDayAdjustment.February28,     2028, "2028-03-01")]
-		[InlineData(2024,  1, LeapDayAdjustment.ThrowException, 2028, "2028-03-01")]
-		[InlineData(2024,  1, LeapDayAdjustment.March1,         2025, "2025-03-02")] // Day after March 1!
-		[InlineData(2024,  1, LeapDayAdjustment.February28,     2025, "2025-03-01")]
-		[InlineData(2024,  1, LeapDayAdjustment.ThrowException, 2025, "2025-03-01")]
-		[InlineData(2024, -1, LeapDayAdjustment.March1,         2028, "2028-02-28")]
-		[InlineData(2024, -1, LeapDayAdjustment.February28,     2028, "2028-02-28")]
+		[InlineData(2024, 0, LeapDayAdjustment.March1, 2028, "2028-02-29")]
+		[InlineData(2024, 0, LeapDayAdjustment.February28, 2028, "2028-02-29")]
+		[InlineData(2024, 0, LeapDayAdjustment.ThrowException, 2028, "2028-02-29")]
+		[InlineData(2024, 0, LeapDayAdjustment.March1, 2025, "2025-03-01")]
+		[InlineData(2024, 0, LeapDayAdjustment.February28, 2025, "2025-02-28")]
+		[InlineData(2024, 1, LeapDayAdjustment.March1, 2028, "2028-03-01")]
+		[InlineData(2024, 1, LeapDayAdjustment.February28, 2028, "2028-03-01")]
+		[InlineData(2024, 1, LeapDayAdjustment.ThrowException, 2028, "2028-03-01")]
+		[InlineData(2024, 1, LeapDayAdjustment.March1, 2025, "2025-03-02")] // Day after March 1!
+		[InlineData(2024, 1, LeapDayAdjustment.February28, 2025, "2025-03-01")]
+		[InlineData(2024, -1, LeapDayAdjustment.March1, 2028, "2028-02-28")]
+		[InlineData(2024, -1, LeapDayAdjustment.February28, 2028, "2028-02-28")]
 		[InlineData(2024, -1, LeapDayAdjustment.ThrowException, 2028, "2028-02-28")]
-		[InlineData(2024, -1, LeapDayAdjustment.March1,         2025, "2025-02-28")]
-		[InlineData(2024, -1, LeapDayAdjustment.February28,     2025, "2025-02-27")] // Day before February 28!
-		[InlineData(2024, -1, LeapDayAdjustment.ThrowException, 2025, "2025-02-28")]
-		[InlineData(null,  0, LeapDayAdjustment.March1,         2028, "2028-02-29")]
-		[InlineData(null,  0, LeapDayAdjustment.February28,     2028, "2028-02-29")]
-		[InlineData(null,  0, LeapDayAdjustment.ThrowException, 2028, "2028-02-29")]
-		[InlineData(null,  0, LeapDayAdjustment.March1,         2025, "2025-03-01")]
-		[InlineData(null,  0, LeapDayAdjustment.February28,     2025, "2025-02-28")]
-		[InlineData(null,  0, LeapDayAdjustment.ThrowException, 2025,         null)]
-		[InlineData(null,  1, LeapDayAdjustment.March1,         2028, "2028-03-01")]
-		[InlineData(null,  1, LeapDayAdjustment.February28,     2028, "2028-03-01")]
-		[InlineData(null,  1, LeapDayAdjustment.ThrowException, 2028, "2028-03-01")]
-		[InlineData(null,  1, LeapDayAdjustment.March1,         2025, "2025-03-02")] // Day after March 1!
-		[InlineData(null,  1, LeapDayAdjustment.February28,     2025, "2025-03-01")]
-		[InlineData(null,  1, LeapDayAdjustment.ThrowException, 2025, "2025-03-01")]
-		[InlineData(null, -1, LeapDayAdjustment.March1,         2028, "2028-02-28")]
-		[InlineData(null, -1, LeapDayAdjustment.February28,     2028, "2028-02-28")]
+		[InlineData(2024, -1, LeapDayAdjustment.March1, 2025, "2025-02-28")]
+		[InlineData(2024, -1, LeapDayAdjustment.February28, 2025, "2025-02-27")] // Day before February 28!
+		[InlineData(null, 0, LeapDayAdjustment.March1, 2028, "2028-02-29")]
+		[InlineData(null, 0, LeapDayAdjustment.February28, 2028, "2028-02-29")]
+		[InlineData(null, 0, LeapDayAdjustment.ThrowException, 2028, "2028-02-29")]
+		[InlineData(null, 0, LeapDayAdjustment.March1, 2025, "2025-03-01")]
+		[InlineData(null, 0, LeapDayAdjustment.February28, 2025, "2025-02-28")]
+		[InlineData(null, 1, LeapDayAdjustment.March1, 2028, "2028-03-01")]
+		[InlineData(null, 1, LeapDayAdjustment.February28, 2028, "2028-03-01")]
+		[InlineData(null, 1, LeapDayAdjustment.ThrowException, 2028, "2028-03-01")]
+		[InlineData(null, 1, LeapDayAdjustment.March1, 2025, "2025-03-02")] // Day after March 1!
+		[InlineData(null, 1, LeapDayAdjustment.February28, 2025, "2025-03-01")]
+		[InlineData(null, -1, LeapDayAdjustment.March1, 2028, "2028-02-28")]
+		[InlineData(null, -1, LeapDayAdjustment.February28, 2028, "2028-02-28")]
 		[InlineData(null, -1, LeapDayAdjustment.ThrowException, 2028, "2028-02-28")]
-		[InlineData(null, -1, LeapDayAdjustment.March1,         2025, "2025-02-28")]
-		[InlineData(null, -1, LeapDayAdjustment.February28,     2025, "2025-02-27")] // Day before February 28!
-		[InlineData(null, -1, LeapDayAdjustment.ThrowException, 2025, "2025-02-28")]
-		private void LeapDay(int? year, int offset, LeapDayAdjustment lda, int inYear, string expected)
+		[InlineData(null, -1, LeapDayAdjustment.March1, 2025, "2025-02-28")]
+		[InlineData(null, -1, LeapDayAdjustment.February28, 2025, "2025-02-27")] // Day before February 28!
+		public void LeapDayAdjustment_HappyPaths(int? year, int offset, LeapDayAdjustment lda, int inYear, string expected)
+		{
+			var date = new Dates.StaticDate(year, 2, 29, offset, lda);
+			Assert.Equal(expected, date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
+		}
+
+		[Theory]
+		[InlineData(2024, -1, LeapDayAdjustment.ThrowException, 2025)]
+		[InlineData(2024, 0, LeapDayAdjustment.ThrowException, 2025)]
+		[InlineData(2024, 1, LeapDayAdjustment.ThrowException, 2025)]
+		[InlineData(null, -1, LeapDayAdjustment.ThrowException, 2025)]
+		[InlineData(null, 0, LeapDayAdjustment.ThrowException, 2025)]
+		[InlineData(null, 1, LeapDayAdjustment.ThrowException, 2025)]
+		public void LeapDayAdjustment_Throws(int? year, int offset, LeapDayAdjustment lda, int inYear)
 		{
 			var date = new Dates.StaticDate(year, 2, 29, offset, lda);
 
-			if (!DateTime.IsLeapYear(inYear) && lda == LeapDayAdjustment.ThrowException)
-			{
-				Assert.Throws<InvalidOperationException>(() => date.CalculateDate(inYear));
-			}
-			else
-			{
-				Assert.Equal(expected, date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
-			}
+			Assert.Throws<InvalidOperationException>(() => date.CalculateDate(inYear));
 		}
 
 		[Theory]

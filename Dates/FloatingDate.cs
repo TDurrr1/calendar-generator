@@ -40,7 +40,7 @@ namespace Dates
 
 		public static Regex RegEx = new Regex($"^((?<{nameof(Year)}>\\d{{4}})-)?(?<{nameof(Month)}>\\d{{2}})-N(?<{nameof(Instance)}>\\d|L)-(?<{nameof(DayOfWeek)}>\\d)(_(?<{nameof(Offset)}>[+-]?\\d{{1,3}}))?$", RegexOptions.ExplicitCapture & RegexOptions.Compiled);
 
-		public static new FloatingDate Parse([DisallowNull] string s, IFormatProvider? provider)
+		public static new FloatingDate Parse(string s, IFormatProvider? provider)
 		{
 			if (!RegEx.IsMatch(s)) throw new FormatException();
 
@@ -74,10 +74,12 @@ namespace Dates
 			}
 		}
 
-		public static bool TryParse(string? s, IFormatProvider? provider, [NotNullWhen(true), MaybeNullWhen(false)] out FloatingDate result)
+		public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [NotNullWhen(true), MaybeNullWhen(false)] out FloatingDate result)
 		{
-			provider ??= CultureInfo.CurrentCulture;
 			result = null;
+			if (s is null) return false;
+
+			provider ??= CultureInfo.CurrentCulture;
 
 			try
 			{

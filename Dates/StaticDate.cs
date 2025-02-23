@@ -30,7 +30,7 @@ namespace Dates
 
 		public static Regex RegEx = new Regex($"^((?<{nameof(Year)}>\\d{{4}})-)?(?<{nameof(Month)}>\\d{{2}})-(?<{nameof(Day)}>\\d{{2}})(_(?<{nameof(Offset)}>[+-]?\\d{{1,3}}))?$", RegexOptions.ExplicitCapture & RegexOptions.Compiled);
 
-		public static new StaticDate Parse([DisallowNull] string s, IFormatProvider? provider = null)
+		public static new StaticDate Parse(string s, IFormatProvider? provider = null)
 		{
 			ArgumentNullException.ThrowIfNull(s);
 			if (!RegEx.IsMatch(s)) throw new FormatException();
@@ -65,8 +65,10 @@ namespace Dates
 
 		public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [NotNullWhen(true), MaybeNullWhen(false)] out StaticDate result)
 		{
-			provider ??= CultureInfo.CurrentCulture;
 			result = null;
+			if (s is null) return false;
+
+			provider ??= CultureInfo.CurrentCulture;
 
 			try
 			{

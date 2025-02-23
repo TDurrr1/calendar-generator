@@ -17,7 +17,7 @@ namespace Events.Test
 			var observance = new Events.Observance(name, date);
 
 			Assert.Equal(expectedDate, observance.Date.CalculateDate(inYear).ToString("yyyy-MM-dd"));
-			Assert.Equal(expectedDesc, observance.Describe(inYear));
+			Assert.Equal(expectedDesc, observance.Describe(inYear, CalendarVersionName.Durr));
 		}
 
 		[Fact]
@@ -27,7 +27,9 @@ namespace Events.Test
 
 			Assert.Throws<ArgumentNullException>(() =>
 			{
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 				var observance = new Events.Observance(null, date);
+#pragma warning restore CS8625
 			});
 			Assert.Throws<ArgumentException>(() =>
 			{
@@ -40,22 +42,38 @@ namespace Events.Test
 		}
 
 		[Fact]
-		public void Instantiation_AllowsNullDate()
+		public void Instantiation_DoesNotAllowNullDate()
 		{
-			var observance = new Events.Observance("Tyler", null);
+			Assert.Throws<ArgumentNullException>(static () =>
+			{
+#pragma warning disable CS8600, CS8604 // Converting null literal or possible null value to non-nullable type; possible null reference argument.
+				StaticDate date = null;
+				var observance = new Events.Observance("Tyler", date);
+#pragma warning restore CS8600, CS8604
+			});
 		}
 
 		[Fact]
-		public void DateCanBeSetAfterInstantiation()
+		public void DateSetting()
 		{
-			var observance = new Events.Observance("Easter", null);
-			Assert.Null(observance.Date?.CalculateDate(2024));
+			var expectedDate = new DateOnly(2024, 3, 31);
+			var calculationDescription = "Just Google it.";
 
-			observance.Date = new StaticDate(null, 3, 31);
-			Assert.Equal(new DateOnly(2024, 3, 31), observance.Date.CalculateDate(2024));
+			var observance = new Events.Observance("Easter", calculationDescription);
+			var exception = Assert.Throws<DateUnspecifiedException>(() =>
+			{
+				var actualDate = observance.Date.CalculateDate(expectedDate.Year);
+			});
+			Assert.Equal(calculationDescription, exception.Message);
 
-			observance.Date = new IndeterminateDate("Can't programmatically calculate date");
-			Assert.Throws<NotImplementedException>(() => observance.Date.CalculateDate(2024));
+			observance.Date = new StaticDate(null, expectedDate.Month, expectedDate.Day);
+			Assert.Equal(expectedDate, observance.Date.CalculateDate(expectedDate.Year));
+
+			Assert.Throws<DateSpecifiedException>(() =>
+			{
+				observance.Date = new StaticDate(1996, 10, 03);
+			});
+			Assert.Equal(expectedDate, observance.Date.CalculateDate(expectedDate.Year));
 		}
 	}
 }

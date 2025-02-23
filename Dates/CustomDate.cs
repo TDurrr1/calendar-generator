@@ -19,27 +19,28 @@ namespace Dates
 		{
 		}
 
-		public int? AgeIn(int inYear)
+		public int? AgeIn(int year)
 		{
-			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(inYear);
-
+			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(year);
 			if (!Year.HasValue) return null;
-			return inYear - Year.Value;
-		}
 
+			return year - Year.Value;
+		}
+		
 		public abstract DateOnly CalculateDate(int inYear);
 
 		public static CustomDate Parse(string s, IFormatProvider? provider)
 		{
-			if (IndeterminateDate.TryParse(s, provider, out IndeterminateDate indetDate)) return indetDate;
-			if (FloatingDate.TryParse(s, provider, out FloatingDate floatingDate)) return floatingDate;
-			if (StaticDate.TryParse(s, provider, out StaticDate staticDate)) return staticDate;
+			if (FloatingDate.TryParse(s, provider, out FloatingDate? floatingDate)) return floatingDate;
+			if (StaticDate.TryParse(s, provider, out StaticDate? staticDate)) return staticDate;
 			throw new ArgumentException("Input string format was not recognized.", nameof(s));
 		}
 
 		public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [NotNullWhen(true), MaybeNullWhen(false)] out CustomDate result)
 		{
 			result = null;
+			if (s is null) return false;
+
 			try
 			{
 				result = Parse(s, provider);
