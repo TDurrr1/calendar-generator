@@ -1,23 +1,27 @@
 ﻿using Dates;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Events
 {
 	public class Death : PersonalEvent
 	{
-		public Death([NotNull] string name, [NotNull] StaticDate date) : base(name, date, EventType.Death, null)
+		public Death(string defaultName, StaticDate date, IDictionary<CalendarVersionName, string>? versionNames = null, bool ignoreAge = false) : base(EventType.Death, defaultName, date, versionNames, ignoreAge)
 		{
-			ArgumentNullException.ThrowIfNull(date);
+		}
+		public Death(string defaultName, string calculationDescription, IDictionary<CalendarVersionName, string>? versionNames = null, bool ignoreAge = false) : base(EventType.Death, defaultName, calculationDescription, versionNames, ignoreAge)
+		{
 		}
 
-		public override string Describe(int year)
+		public override string Describe(int year, CalendarVersionName version)
 		{
-			var desc = Identifier;
-			var age = Date?.AgeIn(year);
+			var desc = "Remembering " + VersionIdentifiers.GetValueOrDefault(version, DefaultIdentifier);
 
-			if (age.HasValue && age.Value != 0)
+			if (!IgnoreAge)
 			{
-				desc += " (" + age.Value + " year" + (age == 1 ? string.Empty : "s") + ")";
+				var age = Date.AgeIn(year);
+				if (age.HasValue)
+				{
+					desc += " (" + age.Value + " year" + (age == 1 ? string.Empty : "s") + ")";
+				}
 			}
 
 			return desc;

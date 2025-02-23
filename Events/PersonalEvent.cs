@@ -1,51 +1,38 @@
 ﻿using Dates;
 using Extensions;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Frozen;
 
 namespace Events
 {
-	public class PersonalEvent : CalendarEvent
+	public abstract class PersonalEvent : CalendarEvent
 	{
-		public static readonly IReadOnlySet<EventType> AllowedEventTypes = new HashSet<EventType>
+		public static readonly FrozenSet<EventType> AllowedEventTypes = new HashSet<EventType>
 		{
-			EventType.Birthday,
+			EventType.Birth,
 			EventType.Marriage,
 			EventType.Death
-		};
+		}.ToFrozenSet();
 
-		public string Possessive { get; protected init; }
-
-		public PersonalEvent([NotNull] string name, [NotNull] StaticDate date, [NotNull] EventType eventType, string possessive = null) : base(name, date, eventType)
+		public override EventType Type
 		{
-			ArgumentNullException.ThrowIfNull(date);
+			get => base.Type;
+			protected init
+			{
+				if (!AllowedEventTypes.Contains(value))
+				{
+					throw new ArgumentException("Must provide " + AllowedEventTypes.Select(t => t.ToString()).TextualJoin("or") + " as the event type", nameof(value));
+				}
 
-			if (!AllowedEventTypes.Contains(eventType))
-			{
-				throw new ArgumentException(nameof(eventType));
-			}
-
-			if (possessive == null)
-			{
-				Possessive = Identifier + "’s";
-			}
-			else
-			{
-				ArgumentException.ThrowIfNullOrWhiteSpace(possessive);
-				Possessive = possessive.Trim();
+				base.Type = value;
 			}
 		}
 
-		public override string Describe(int year)
+		public PersonalEvent(EventType eventType, string defaultIdentifier, StaticDate date, IDictionary<CalendarVersionName, string>? versionIdentifiers = null, bool ignoreAge = false) : base(eventType, defaultIdentifier, date, versionIdentifiers, ignoreAge)
 		{
-			var desc = Possessive;
-			var age = Date?.AgeIn(year);
+		}
 
-			if (age.HasValue)
-			{
-				desc += " " + age.Value.AsOrdinal();
-			}
-
-			return desc;
+		public PersonalEvent(EventType eventType, string defaultIdentifier, string calculationDescription, IDictionary<CalendarVersionName, string>? versionIdentifiers = null, bool ignoreAge = false) : base(eventType, defaultIdentifier, calculationDescription, versionIdentifiers, ignoreAge)
+		{
 		}
 	}
 }

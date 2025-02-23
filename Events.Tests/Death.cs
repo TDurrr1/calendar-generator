@@ -1,19 +1,21 @@
+using Dates;
+
 namespace Events.Test
 {
 	public class Death
 	{
 		[Theory]
-		[InlineData("Tyler", 1996, 10, 3, 2024, "Tyler (28 years)")]
-		[InlineData("Tyler", 2023, 10, 3, 2024, "Tyler (1 year)")]
-		[InlineData("Baby", 2025, 10, 3, 2024, "Baby (-1 years)")]
-		[InlineData("Baby", 2024, 10, 3, 2024, "Baby")]
-		[InlineData("Monica", null, 10, 19, 2024, "Monica")]
+		[InlineData("Tyler", 1996, 10, 3, 2024, "Remembering Tyler (28 years)")]
+		[InlineData("Tyler", 2023, 10, 3, 2024, "Remembering Tyler (1 year)")]
+		[InlineData("Baby", 2025, 10, 3, 2024, "Remembering Baby (-1 years)")]
+		[InlineData("Baby", 2024, 10, 3, 2024, "Remembering Baby (0 years)")]
+		[InlineData("Monica", null, 10, 19, 2024, "Remembering Monica")]
 		public void Instantiation(string name, int? year, int month, int day, int inYear, string expectedDesc)
 		{
 			var date = new Dates.StaticDate(year, month, day);
 			var death = new Events.Death(name, date);
 
-			Assert.Equal(name, death.Identifier);
+			Assert.Equal(name, death.DefaultIdentifier);
 			Assert.Equal(new DateOnly(inYear, month, day), death.Date.CalculateDate(inYear));
 			if (year.HasValue)
 			{
@@ -25,7 +27,7 @@ namespace Events.Test
 			}
 			Assert.Equal(EventType.Death, death.Type);
 
-			Assert.Equal(expectedDesc, death.Describe(inYear));
+			Assert.Equal(expectedDesc, death.Describe(inYear, CalendarVersionName.Durr));
 		}
 
 		[Fact]
@@ -54,7 +56,8 @@ namespace Events.Test
 
 			Assert.Throws<ArgumentNullException>(() =>
 			{
-				var death = new Events.Death(name, null);
+				StaticDate date = null;
+				var death = new Events.Death(name, date);
 			});
 		}
 	}
